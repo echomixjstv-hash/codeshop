@@ -1,0 +1,4801 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
+
+<title>Code To Buy - Seller Dashboard</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    background:#f4f6f8;
+    color:#222;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none !important;
+}
+
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+.auth-page{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:linear-gradient(135deg,#111827,#1f2937);
+}
+
+.auth-box{
+    width:100%;
+    max-width:420px;
+    background:#fff;
+    border-radius:16px;
+    padding:30px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.auth-logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.auth-logo h1{
+    font-size:30px;
+    color:#111827;
+}
+
+.auth-logo p{
+    margin-top:6px;
+    color:#6b7280;
+    font-size:14px;
+}
+
+.auth-tabs{
+    display:flex;
+    border-bottom:1px solid #ddd;
+    margin-bottom:20px;
+}
+
+.auth-tab{
+    flex:1;
+    padding:12px;
+    background:none;
+    border:0;
+    color:#777;
+    font-weight:bold;
+    border-bottom:3px solid transparent;
+}
+
+.auth-tab.active{
+    color:#111827;
+    border-bottom-color:#111827;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:7px;
+    color:#374151;
+}
+
+.form-group input{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+}
+
+.form-group input:focus{
+    border-color:#111827;
+}
+
+.primary-btn{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:8px;
+    background:#111827;
+    color:#fff;
+    font-weight:bold;
+}
+
+.primary-btn:hover{
+    background:#000;
+}
+
+.auth-message{
+    margin-top:15px;
+    padding:10px;
+    border-radius:7px;
+    font-size:13px;
+    display:none;
+}
+
+.auth-message.error{
+    display:block;
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.auth-message.success{
+    display:block;
+    background:#dcfce7;
+    color:#166534;
+}
+
+
+/* =====================================================
+   APP
+===================================================== */
+
+.app{
+    min-height:100vh;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:240px;
+    background:#111827;
+    color:#fff;
+    z-index:100;
+    display:flex;
+    flex-direction:column;
+}
+
+.sidebar-logo{
+    padding:25px 20px;
+    border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.sidebar-logo h2{
+    font-size:22px;
+}
+
+.sidebar-logo p{
+    color:#9ca3af;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.seller-info{
+    padding:18px 20px;
+    border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.seller-info strong{
+    display:block;
+    font-size:15px;
+}
+
+.seller-info span{
+    display:block;
+    margin-top:4px;
+    color:#9ca3af;
+    font-size:12px;
+}
+
+.nav{
+    padding:15px 10px;
+    flex:1;
+}
+
+.nav button{
+    width:100%;
+    text-align:left;
+    border:0;
+    background:transparent;
+    color:#cbd5e1;
+    padding:13px 14px;
+    border-radius:8px;
+    margin-bottom:5px;
+}
+
+.nav button:hover,
+.nav button.active{
+    background:#1f2937;
+    color:#fff;
+}
+
+.logout-btn{
+    margin:15px;
+    padding:12px;
+    border:1px solid #374151;
+    border-radius:8px;
+    background:transparent;
+    color:#fff;
+}
+
+.logout-btn:hover{
+    background:#1f2937;
+}
+
+.main{
+    margin-left:240px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:#fff;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+}
+
+.topbar h1{
+    font-size:22px;
+}
+
+.shop-badge{
+    background:#f3f4f6;
+    padding:8px 12px;
+    border-radius:20px;
+    font-size:13px;
+    color:#374151;
+}
+
+.content{
+    padding:25px;
+}
+
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:#fff;
+    border-radius:12px;
+    padding:20px;
+    border:1px solid #e5e7eb;
+}
+
+.stat-card .label{
+    color:#6b7280;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.stat-card .value{
+    font-size:26px;
+    font-weight:bold;
+    color:#111827;
+}
+
+.section{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    margin-bottom:20px;
+    overflow:hidden;
+}
+
+.section-header{
+    padding:18px 20px;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.section-header h2{
+    font-size:17px;
+}
+
+.section-body{
+    padding:20px;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn{
+    padding:9px 14px;
+    border:0;
+    border-radius:7px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#111827;
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:#000;
+}
+
+.btn-secondary{
+    background:#e5e7eb;
+    color:#111827;
+}
+
+.btn-danger{
+    background:#dc2626;
+    color:#fff;
+}
+
+.btn-success{
+    background:#16a34a;
+    color:#fff;
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-wrap{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+th,
+td{
+    padding:13px 12px;
+    text-align:left;
+    border-bottom:1px solid #eee;
+    font-size:13px;
+}
+
+th{
+    background:#f9fafb;
+    color:#4b5563;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+td{
+    color:#374151;
+}
+
+.product-name{
+    font-weight:bold;
+    color:#111827;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.status.active{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status.inactive{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.status.pending{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status.approved{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status.rejected{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.input{
+    width:100%;
+    padding:11px 13px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    outline:none;
+}
+
+.input:focus{
+    border-color:#111827;
+}
+
+textarea.input{
+    min-height:100px;
+    resize:vertical;
+}
+
+.form-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty{
+    padding:45px 20px;
+    text-align:center;
+    color:#9ca3af;
+}
+
+.empty strong{
+    display:block;
+    color:#6b7280;
+    margin-bottom:5px;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:500;
+}
+
+.modal-box{
+    width:100%;
+    max-width:600px;
+    max-height:90vh;
+    overflow-y:auto;
+    background:#fff;
+    border-radius:14px;
+}
+
+.modal-header{
+    padding:18px 20px;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.modal-header h2{
+    font-size:18px;
+}
+
+.modal-close{
+    border:0;
+    background:none;
+    font-size:25px;
+    color:#6b7280;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+
+/* =====================================================
+   CASHOUT
+===================================================== */
+
+.balance-box{
+    background:#111827;
+    color:#fff;
+    border-radius:12px;
+    padding:25px;
+    margin-bottom:20px;
+}
+
+.balance-box .small{
+    color:#9ca3af;
+    font-size:13px;
+}
+
+.balance-box .amount{
+    font-size:32px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+.cashout-info{
+    background:#f9fafb;
+    border-radius:8px;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.cashout-row{
+    display:flex;
+    justify-content:space-between;
+    padding:7px 0;
+    font-size:13px;
+}
+
+.cashout-row.total{
+    border-top:1px solid #ddd;
+    margin-top:7px;
+    padding-top:12px;
+    font-weight:bold;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+.mobile-menu{
+    display:none;
+    border:0;
+    background:none;
+    font-size:24px;
+}
+
+@media(max-width:1000px){
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.25s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading{
+    text-align:center;
+    padding:30px;
+    color:#6b7280;
+}
+
+.spinner{
+    width:28px;
+    height:28px;
+    border:3px solid #ddd;
+    border-top-color:#111827;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 10px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     AUTH PAGE
+===================================================== -->
+
+<div
+    id="authPage"
+    class="auth-page"
+>
+
+    <div class="auth-box">
+
+        <div class="auth-logo">
+
+            <h1>Code To Buy</h1>
+
+            <p>Seller Dashboard</p>
+
+        </div>
+
+
+        <div class="auth-tabs">
+
+            <button
+                id="loginTab"
+                class="auth-tab active"
+                onclick="showAuth('login')"
+            >
+                Login
+            </button>
+
+            <button
+                id="registerTab"
+                class="auth-tab"
+                onclick="showAuth('register')"
+            >
+                Create Account
+            </button>
+
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <form
+            id="loginForm"
+            onsubmit="loginSeller(event)"
+        >
+
+            <div class="form-group">
+
+                <label>Username</label>
+
+                <input
+                    id="loginUsername"
+                    type="text"
+                    required
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Password</label>
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    required
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- REGISTER -->
+
+        <form
+            id="registerForm"
+            class="hidden"
+            onsubmit="registerSeller(event)"
+        >
+
+            <div class="form-group">
+
+                <label>Shop Name</label>
+
+                <input
+                    id="registerShopName"
+                    type="text"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Username</label>
+
+                <input
+                    id="registerUsername"
+                    type="text"
+                    required
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Password</label>
+
+                <input
+                    id="registerPassword"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Confirm Password</label>
+
+                <input
+                    id="registerConfirmPassword"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-btn"
+            >
+                Create Seller Account
+            </button>
+
+        </form>
+
+
+        <div
+            id="authMessage"
+            class="auth-message"
+        ></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     APP
+===================================================== -->
+
+<div
+    id="app"
+    class="app hidden"
+>
+
+
+    <!-- SIDEBAR -->
+
+    <aside
+        id="sidebar"
+        class="sidebar"
+    >
+
+        <div class="sidebar-logo">
+
+            <h2>Code To Buy</h2>
+
+            <p>Seller Dashboard</p>
+
+        </div>
+
+
+        <div class="seller-info">
+
+            <strong id="sidebarShopName">
+                Shop
+            </strong>
+
+            <span id="sidebarUsername">
+                @username
+            </span>
+
+        </div>
+
+
+        <nav class="nav">
+
+            <button
+                id="navDashboard"
+                class="active"
+                onclick="navigate('dashboard')"
+            >
+                Dashboard
+            </button>
+
+            <button
+                id="navProducts"
+                onclick="navigate('products')"
+            >
+                Products
+            </button>
+
+            <button
+                id="navOrders"
+                onclick="navigate('orders')"
+            >
+                Sales / Orders
+            </button>
+
+            <button
+                id="navEarnings"
+                onclick="navigate('earnings')"
+            >
+                Earnings
+            </button>
+
+            <button
+                id="navCashout"
+                onclick="navigate('cashout')"
+            >
+                Cash Out
+            </button>
+
+        </nav>
+
+
+        <button
+            class="logout-btn"
+            onclick="logoutSeller()"
+        >
+            Logout
+        </button>
+
+    </aside>
+
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div style="display:flex;align-items:center;gap:12px;">
+
+                <button
+                    class="mobile-menu"
+                    onclick="toggleSidebar()"
+                >
+                    ☰
+                </button>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div
+                id="topShopBadge"
+                class="shop-badge"
+            >
+                Shop
+            </div>
+
+        </header>
+
+
+        <div class="content">
+
+
+            <!-- =================================================
+                 DASHBOARD
+            ================================================= -->
+
+            <section
+                id="pageDashboard"
+                class="page"
+            >
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            My Products
+                        </div>
+
+                        <div
+                            id="statProducts"
+                            class="value"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            Total Sales
+                        </div>
+
+                        <div
+                            id="statSales"
+                            class="value"
+                        >
+                            ₱0.00
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            Earnings
+                        </div>
+
+                        <div
+                            id="statEarnings"
+                            class="value"
+                        >
+                            ₱0.00
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            Available Balance
+                        </div>
+
+                        <div
+                            id="statBalance"
+                            class="value"
+                        >
+                            ₱0.00
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            My Products
+                        </h2>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="openProductModal()"
+                        >
+                            + Add Product
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="dashboardProducts"
+                        class="section-body"
+                    ></div>
+
+                </div>
+
+
+                <div class="section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Recent Sales
+                        </h2>
+
+                    </div>
+
+                    <div
+                        id="dashboardSales"
+                        class="section-body"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PRODUCTS
+            ================================================= -->
+
+            <section
+                id="pageProducts"
+                class="page hidden"
+            >
+
+                <div class="section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            My Products
+                        </h2>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="openProductModal()"
+                        >
+                            + Add Product
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="productsList"
+                        class="section-body"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ORDERS
+            ================================================= -->
+
+            <section
+                id="pageOrders"
+                class="page hidden"
+            >
+
+                <div class="section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            My Sales / Orders
+                        </h2>
+
+                    </div>
+
+                    <div
+                        id="ordersList"
+                        class="section-body"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 EARNINGS
+            ================================================= -->
+
+            <section
+                id="pageEarnings"
+                class="page hidden"
+            >
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            Gross Sales
+                        </div>
+
+                        <div
+                            id="earnGross"
+                            class="value"
+                        >
+                            ₱0.00
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            Seller Earnings
+                        </div>
+
+                        <div
+                            id="earnNet"
+                            class="value"
+                        >
+                            ₱0.00
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            Total Cash Out
+                        </div>
+
+                        <div
+                            id="earnCashout"
+                            class="value"
+                        >
+                            ₱0.00
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="label">
+                            Available Balance
+                        </div>
+
+                        <div
+                            id="earnBalance"
+                            class="value"
+                        >
+                            ₱0.00
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Earnings Details
+                        </h2>
+
+                    </div>
+
+                    <div
+                        id="earningsDetails"
+                        class="section-body"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CASHOUT
+            ================================================= -->
+
+            <section
+                id="pageCashout"
+                class="page hidden"
+            >
+
+                <div class="balance-box">
+
+                    <div class="small">
+                        Available Balance
+                    </div>
+
+                    <div
+                        id="cashoutBalance"
+                        class="amount"
+                    >
+                        ₱0.00
+                    </div>
+
+                </div>
+
+
+                <div class="section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Request Cash Out
+                        </h2>
+
+                    </div>
+
+                    <div class="section-body">
+
+                        <div class="cashout-info">
+
+                            <div class="cashout-row">
+
+                                <span>
+                                    Seller Earnings
+                                </span>
+
+                                <strong id="cashoutEarnings">
+                                    ₱0.00
+                                </strong>
+
+                            </div>
+
+
+                            <div class="cashout-row">
+
+                                <span>
+                                    Cash Out Fee
+                                </span>
+
+                                <strong>
+                                    ₱5.60
+                                </strong>
+
+                            </div>
+
+
+                            <div class="cashout-row total">
+
+                                <span>
+                                    You will receive
+                                </span>
+
+                                <strong id="cashoutReceive">
+                                    ₱0.00
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            onsubmit="requestCashout(event)"
+                        >
+
+                            <div class="form-group">
+
+                                <label>
+                                    Cash Out Amount
+                                </label>
+
+                                <input
+                                    id="cashoutAmount"
+                                    class="input"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                    oninput="updateCashoutPreview()"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    GCash / Payment Account
+                                </label>
+
+                                <input
+                                    id="cashoutAccount"
+                                    class="input"
+                                    type="text"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Request Cash Out
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <div class="section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            Cash Out History
+                        </h2>
+
+                    </div>
+
+                    <div
+                        id="cashoutHistory"
+                        class="section-body"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     PRODUCT MODAL
+===================================================== -->
+
+<div
+    id="productModal"
+    class="modal hidden"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2 id="productModalTitle">
+                Add Product
+            </h2>
+
+            <button
+                class="modal-close"
+                onclick="closeProductModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <form
+                id="productForm"
+                onsubmit="saveProduct(event)"
+            >
+
+                <input
+                    id="productId"
+                    type="hidden"
+                >
+
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+
+                        <label>
+                            Product Name
+                        </label>
+
+                        <input
+                            id="productName"
+                            class="input"
+                            type="text"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Price
+                        </label>
+
+                        <input
+                            id="productPrice"
+                            class="input"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Description
+                        </label>
+
+                        <textarea
+                            id="productDescription"
+                            class="input"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Connection Guide
+                        </label>
+
+                        <textarea
+                            id="productConnectionGuide"
+                            class="input"
+                            placeholder="text paste here"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            C++ Code
+                        </label>
+
+                        <textarea
+                            id="productCppCode"
+                            class="input"
+                            placeholder="paste here"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div
+                        id="htmlFields"
+                        class="full"
+                    ></div>
+
+
+                    <div class="form-group full">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick="addHtmlField()"
+                        >
+                            + Add More HTML
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="closeProductModal()"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Save Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   FIREBASE DATABASE
+===================================================== */
+
+const DATABASE_URL =
+    "https://codetobuy-70fff-default-rtdb.firebaseio.com";
+
+
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
+
+let currentSeller = null;
+
+let products = {};
+
+let orders = {};
+
+let cashouts = {};
+
+let refreshTimer = null;
+
+const CASHOUT_FEE = 5.60;
+
+const SELLER_RATE = 0.95;
+
+
+/* =====================================================
+   FIREBASE HELPERS
+===================================================== */
+
+async function firebaseGet(path){
+
+    const response =
+        await fetch(
+            DATABASE_URL + "/" + path + ".json"
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "Firebase GET failed: " +
+            response.status
+        );
+
+    }
+
+    return await response.json();
+
+}
+
+
+async function firebasePut(path,data){
+
+    const response =
+        await fetch(
+            DATABASE_URL + "/" + path + ".json",
+            {
+                method:"PUT",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(data)
+            }
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "Firebase PUT failed: " +
+            response.status
+        );
+
+    }
+
+    return await response.json();
+
+}
+
+
+async function firebasePatch(path,data){
+
+    const response =
+        await fetch(
+            DATABASE_URL + "/" + path + ".json",
+            {
+                method:"PATCH",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(data)
+            }
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "Firebase PATCH failed: " +
+            response.status
+        );
+
+    }
+
+    return await response.json();
+
+}
+
+
+async function firebaseDelete(path){
+
+    const response =
+        await fetch(
+            DATABASE_URL + "/" + path + ".json",
+            {
+                method:"DELETE"
+            }
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "Firebase DELETE failed: " +
+            response.status
+        );
+
+    }
+
+    return await response.json();
+
+}
+
+
+/* =====================================================
+   AUTH TABS
+===================================================== */
+
+function showAuth(type){
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+    const registerForm =
+        document.getElementById("registerForm");
+
+    const loginTab =
+        document.getElementById("loginTab");
+
+    const registerTab =
+        document.getElementById("registerTab");
+
+    clearAuthMessage();
+
+    if(type === "login"){
+
+        loginForm.classList.remove("hidden");
+
+        registerForm.classList.add("hidden");
+
+        loginTab.classList.add("active");
+
+        registerTab.classList.remove("active");
+
+    }else{
+
+        loginForm.classList.add("hidden");
+
+        registerForm.classList.remove("hidden");
+
+        loginTab.classList.remove("active");
+
+        registerTab.classList.add("active");
+
+    }
+
+}
+
+
+/* =====================================================
+   AUTH MESSAGE
+===================================================== */
+
+function showAuthMessage(message,type){
+
+    const box =
+        document.getElementById("authMessage");
+
+    box.textContent = message;
+
+    box.className =
+        "auth-message " + type;
+
+}
+
+
+function clearAuthMessage(){
+
+    const box =
+        document.getElementById("authMessage");
+
+    box.textContent = "";
+
+    box.className =
+        "auth-message";
+
+}
+
+
+/* =====================================================
+   PASSWORD HASH
+===================================================== */
+
+async function hashPassword(password){
+
+    const encoder =
+        new TextEncoder();
+
+    const data =
+        encoder.encode(password);
+
+    const hashBuffer =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    const hashArray =
+        Array.from(
+            new Uint8Array(hashBuffer)
+        );
+
+    return hashArray
+        .map(
+            byte =>
+                byte
+                    .toString(16)
+                    .padStart(2,"0")
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   REGISTER SELLER
+===================================================== */
+
+async function registerSeller(event){
+
+    event.preventDefault();
+
+    clearAuthMessage();
+
+    const shopName =
+        document
+            .getElementById("registerShopName")
+            .value
+            .trim();
+
+    const username =
+        document
+            .getElementById("registerUsername")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const password =
+        document
+            .getElementById("registerPassword")
+            .value;
+
+    const confirmPassword =
+        document
+            .getElementById("registerConfirmPassword")
+            .value;
+
+
+    if(!shopName || !username || !password){
+
+        showAuthMessage(
+            "Please complete all fields.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(password !== confirmPassword){
+
+        showAuthMessage(
+            "Passwords do not match.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(password.length < 6){
+
+        showAuthMessage(
+            "Password must be at least 6 characters.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const existingSeller =
+            await firebaseGet(
+                "sellers/" + username
+            );
+
+
+        if(existingSeller){
+
+            showAuthMessage(
+                "Username already exists.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const passwordHash =
+            await hashPassword(password);
+
+
+        const createdAt =
+            new Date().toISOString();
+
+
+        const sellerData = {
+
+            sellerId: username,
+
+            username: username,
+
+            shopName: shopName,
+
+            passwordHash: passwordHash,
+
+            createdAt: createdAt,
+
+            status:"active",
+
+            /*
+             * New seller accounts are isolated from
+             * old/legacy products that have no seller ID.
+             *
+             * This does NOT affect products created
+             * by this seller because those products
+             * receive sellerId/sellerUsername below.
+             */
+            sellerDataVersion: 2
+
+        };
+
+
+        await firebasePut(
+            "sellers/" + username,
+            sellerData
+        );
+
+
+        currentSeller =
+            sellerData;
+
+
+        localStorage.setItem(
+            "codeToBuySellerSession",
+            username
+        );
+
+
+        openSellerApp();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showAuthMessage(
+            "Unable to create account. Please try again.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGIN SELLER
+===================================================== */
+
+async function loginSeller(event){
+
+    event.preventDefault();
+
+    clearAuthMessage();
+
+    const username =
+        document
+            .getElementById("loginUsername")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+
+    if(!username || !password){
+
+        showAuthMessage(
+            "Please enter username and password.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const seller =
+            await firebaseGet(
+                "sellers/" + username
+            );
+
+
+        if(!seller){
+
+            showAuthMessage(
+                "Seller account not found.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if(
+            seller.status &&
+            seller.status !== "active"
+        ){
+
+            showAuthMessage(
+                "This seller account is not active.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const passwordHash =
+            await hashPassword(password);
+
+
+        if(
+            passwordHash !==
+            String(seller.passwordHash || "")
+        ){
+
+            showAuthMessage(
+                "Incorrect password.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        currentSeller =
+            seller;
+
+
+        localStorage.setItem(
+            "codeToBuySellerSession",
+            username
+        );
+
+
+        openSellerApp();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showAuthMessage(
+            "Unable to login. Please try again.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   AUTO LOGIN
+===================================================== */
+
+async function checkSellerSession(){
+
+    const username =
+        localStorage.getItem(
+            "codeToBuySellerSession"
+        );
+
+
+    if(!username){
+
+        return;
+
+    }
+
+
+    try{
+
+        const seller =
+            await firebaseGet(
+                "sellers/" + username
+            );
+
+
+        if(
+            seller &&
+            seller.status === "active"
+        ){
+
+            currentSeller =
+                seller;
+
+            openSellerApp();
+
+        }else{
+
+            localStorage.removeItem(
+                "codeToBuySellerSession"
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Auto login failed:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   OPEN APP
+===================================================== */
+
+function openSellerApp(){
+
+    document
+        .getElementById("authPage")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("sidebarShopName")
+        .textContent =
+            currentSeller.shopName || "Shop";
+
+
+    document
+        .getElementById("sidebarUsername")
+        .textContent =
+            "@" +
+            (currentSeller.username || "");
+
+
+    document
+        .getElementById("topShopBadge")
+        .textContent =
+            currentSeller.shopName || "Shop";
+
+
+    navigate("dashboard");
+
+
+    loadAllData();
+
+
+    if(refreshTimer){
+
+        clearInterval(refreshTimer);
+
+    }
+
+
+    refreshTimer =
+        setInterval(
+            loadAllData,
+            30000
+        );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logoutSeller(){
+
+    if(refreshTimer){
+
+        clearInterval(refreshTimer);
+
+        refreshTimer = null;
+
+    }
+
+
+    currentSeller = null;
+
+    products = {};
+
+    orders = {};
+
+    cashouts = {};
+
+
+    localStorage.removeItem(
+        "codeToBuySellerSession"
+    );
+
+
+    document
+        .getElementById("app")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("authPage")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("loginForm")
+        .reset();
+
+}
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+function toggleSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function navigate(page){
+
+    const pages = [
+        "dashboard",
+        "products",
+        "orders",
+        "earnings",
+        "cashout"
+    ];
+
+
+    pages.forEach(
+        name => {
+
+            const pageElement =
+                document.getElementById(
+                    "page" +
+                    name.charAt(0).toUpperCase() +
+                    name.slice(1)
+                );
+
+
+            if(pageElement){
+
+                pageElement.classList.toggle(
+                    "hidden",
+                    name !== page
+                );
+
+            }
+
+
+            const navElement =
+                document.getElementById(
+                    "nav" +
+                    name.charAt(0).toUpperCase() +
+                    name.slice(1)
+                );
+
+
+            if(navElement){
+
+                navElement.classList.toggle(
+                    "active",
+                    name === page
+                );
+
+            }
+
+        }
+    );
+
+
+    const titles = {
+
+        dashboard:"Dashboard",
+
+        products:"Products",
+
+        orders:"Sales / Orders",
+
+        earnings:"Earnings",
+
+        cashout:"Cash Out"
+
+    };
+
+
+    document
+        .getElementById("pageTitle")
+        .textContent =
+            titles[page] || "Dashboard";
+
+
+    if(page === "dashboard"){
+
+        renderDashboard();
+
+    }
+
+
+    if(page === "products"){
+
+        renderProducts();
+
+    }
+
+
+    if(page === "orders"){
+
+        renderOrders();
+
+    }
+
+
+    if(page === "earnings"){
+
+        renderEarnings();
+
+    }
+
+
+    if(page === "cashout"){
+
+        renderCashout();
+
+    }
+
+
+    if(window.innerWidth <= 700){
+
+        document
+            .getElementById("sidebar")
+            .classList.remove("open");
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD ALL DATA
+===================================================== */
+
+async function loadAllData(){
+
+    if(!currentSeller){
+
+        return;
+
+    }
+
+
+    try{
+
+        const [
+            productsData,
+            ordersData,
+            cashoutsData
+        ] =
+            await Promise.all([
+
+                firebaseGet("products"),
+
+                firebaseGet("orders"),
+
+                firebaseGet("cashouts")
+
+            ]);
+
+
+        products =
+            productsData || {};
+
+
+        orders =
+            ordersData || {};
+
+
+        cashouts =
+            cashoutsData || {};
+
+
+        renderEverything();
+
+
+    }catch(error){
+
+        console.error(
+            "Load data failed:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PRODUCT OWNERSHIP
+===================================================== */
+
+function isMyProduct(product){
+
+    if(!product){
+
+        return false;
+
+    }
+
+
+    const sellerId =
+        currentSeller &&
+        currentSeller.sellerId;
+
+
+    const sellerUsername =
+        currentSeller &&
+        currentSeller.username;
+
+
+    if(
+        product.sellerId &&
+        String(product.sellerId) ===
+        String(sellerId)
+    ){
+
+        return true;
+
+    }
+
+
+    if(
+        product.sellerUsername &&
+        String(product.sellerUsername) ===
+        String(sellerUsername)
+    ){
+
+        return true;
+
+    }
+
+
+    /*
+     * IMPORTANT:
+     *
+     * New seller accounts must NOT inherit
+     * old/legacy products that have no seller
+     * information.
+     *
+     * Existing seller accounts without
+     * sellerDataVersion keep the previous
+     * legacy behavior.
+     */
+
+    if(
+        !product.sellerId &&
+        !product.sellerUsername
+    ){
+
+        if(
+            currentSeller &&
+            currentSeller.sellerDataVersion === 2
+        ){
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   GET MY PRODUCTS
+===================================================== */
+
+function getMyProducts(){
+
+    const result = {};
+
+
+    Object.entries(products || {})
+        .forEach(
+            ([id,product]) => {
+
+                if(isMyProduct(product)){
+
+                    result[id] = product;
+
+                }
+
+            }
+        );
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   GET SELLER SALES
+===================================================== */
+
+function getSellerSales(){
+
+    const myProducts =
+        getMyProducts();
+
+
+    const myProductMap = {};
+
+
+    Object.entries(myProducts)
+        .forEach(
+            ([id,product]) => {
+
+                myProductMap[id] = product;
+
+            }
+        );
+
+
+    const sales = [];
+
+
+    Object.entries(orders || {})
+        .forEach(
+            ([orderId,order]) => {
+
+                if(!order){
+
+                    return;
+
+                }
+
+
+                const paymentStatus =
+                    String(
+                        order.paymentStatus || ""
+                    ).toLowerCase();
+
+
+                const orderStatus =
+                    String(
+                        order.orderStatus || ""
+                    ).toLowerCase();
+
+
+                const approved =
+                    paymentStatus === "approved" ||
+                    orderStatus === "approved" ||
+                    orderStatus === "order_delivered" ||
+                    orderStatus === "completed";
+
+
+                if(!approved){
+
+                    return;
+
+                }
+
+
+                const items =
+                    Array.isArray(order.items)
+                        ? order.items
+                        : [];
+
+
+                items.forEach(
+                    item => {
+
+                        const productId =
+                            item.productId ||
+                            item.id;
+
+
+                        if(
+                            !productId ||
+                            !myProductMap[productId]
+                        ){
+
+                            return;
+
+                        }
+
+
+                        const quantity =
+                            Number(
+                                item.quantity || 1
+                            );
+
+
+                        const price =
+                            Number(
+                                item.price ??
+                                myProductMap[productId].price ??
+                                0
+                            );
+
+
+                        const gross =
+                            price * quantity;
+
+
+                        sales.push({
+
+                            orderId:orderId,
+
+                            productId:productId,
+
+                            productName:
+                                item.productName ||
+                                item.name ||
+                                myProductMap[productId].name ||
+                                "Product",
+
+                            quantity:quantity,
+
+                            price:price,
+
+                            gross:gross,
+
+                            net:gross * SELLER_RATE,
+
+                            createdAt:
+                                order.createdAt ||
+                                order.date ||
+                                ""
+
+                        });
+
+                    }
+                );
+
+            }
+        );
+
+
+    return sales;
+
+}
+
+
+/* =====================================================
+   CALCULATE EARNINGS
+===================================================== */
+
+function calculateEarnings(){
+
+    const sales =
+        getSellerSales();
+
+
+    let gross = 0;
+
+
+    sales.forEach(
+        sale => {
+
+            gross +=
+                Number(sale.gross || 0);
+
+        }
+    );
+
+
+    const net =
+        gross * SELLER_RATE;
+
+
+    let cashoutTotal = 0;
+
+
+    Object.values(cashouts || {})
+        .forEach(
+            cashout => {
+
+                if(!cashout){
+
+                    return;
+
+                }
+
+
+                if(
+                    String(cashout.sellerId) !==
+                    String(currentSeller.sellerId)
+                ){
+
+                    return;
+
+                }
+
+
+                const status =
+                    String(
+                        cashout.status || "pending"
+                    ).toLowerCase();
+
+
+                if(
+                    status === "approved" ||
+                    status === "completed" ||
+                    status === "paid"
+                ){
+
+                    const amount =
+                        Number(
+                            cashout.amount || 0
+                        );
+
+
+                    const fee =
+                        Number(
+                            cashout.fee || CASHOUT_FEE
+                        );
+
+
+                    cashoutTotal +=
+                        amount + fee;
+
+                }
+
+            }
+        );
+
+
+    const balance =
+        Math.max(
+            0,
+            net - cashoutTotal
+        );
+
+
+    return {
+
+        gross:gross,
+
+        net:net,
+
+        cashoutTotal:cashoutTotal,
+
+        balance:balance,
+
+        sales:sales
+
+    };
+
+}
+
+
+/* =====================================================
+   FORMAT MONEY
+===================================================== */
+
+function formatMoney(value){
+
+    return "₱" +
+        Number(value || 0)
+            .toLocaleString(
+                "en-PH",
+                {
+                    minimumFractionDigits:2,
+                    maximumFractionDigits:2
+                }
+            );
+
+}
+
+
+/* =====================================================
+   FORMAT DATE
+===================================================== */
+
+function formatDate(value){
+
+    if(!value){
+
+        return "-";
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if(isNaN(date.getTime())){
+
+        return String(value);
+
+    }
+
+
+    return date.toLocaleString(
+        "en-PH",
+        {
+            year:"numeric",
+            month:"short",
+            day:"numeric",
+            hour:"numeric",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* =====================================================
+   RENDER EVERYTHING
+===================================================== */
+
+function renderEverything(){
+
+    renderDashboard();
+
+    renderProducts();
+
+    renderOrders();
+
+    renderEarnings();
+
+    renderCashout();
+
+}
+
+
+/* =====================================================
+   RENDER DASHBOARD
+===================================================== */
+
+function renderDashboard(){
+
+    const myProducts =
+        getMyProducts();
+
+
+    const earnings =
+        calculateEarnings();
+
+
+    document
+        .getElementById("statProducts")
+        .textContent =
+            Object.keys(myProducts).length;
+
+
+    document
+        .getElementById("statSales")
+        .textContent =
+            formatMoney(
+                earnings.gross
+            );
+
+
+    document
+        .getElementById("statEarnings")
+        .textContent =
+            formatMoney(
+                earnings.net
+            );
+
+
+    document
+        .getElementById("statBalance")
+        .textContent =
+            formatMoney(
+                earnings.balance
+            );
+
+
+    renderDashboardProducts();
+
+    renderDashboardSales();
+
+}
+
+
+/* =====================================================
+   DASHBOARD PRODUCTS
+===================================================== */
+
+function renderDashboardProducts(){
+
+    const container =
+        document.getElementById(
+            "dashboardProducts"
+        );
+
+
+    const myProducts =
+        getMyProducts();
+
+
+    const entries =
+        Object.entries(myProducts)
+            .slice(0,5);
+
+
+    if(!entries.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    No products yet
+                </strong>
+
+                Add your first product to start selling.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Product</th>
+
+                        <th>Price</th>
+
+                        <th>Stock</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    entries.forEach(
+        ([id,product]) => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+
+                        <div class="product-name">
+
+                            ${escapeHtml(
+                                product.name ||
+                                "Unnamed Product"
+                            )}
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            product.price || 0
+                        )}
+                    </td>
+
+                    <td>
+                        ${Number(
+                            product.stock || 0
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="status ${
+                            product.active === false
+                                ? "inactive"
+                                : "active"
+                        }">
+
+                            ${
+                                product.active === false
+                                    ? "Inactive"
+                                    : "Active"
+                            }
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   DASHBOARD SALES
+===================================================== */
+
+function renderDashboardSales(){
+
+    const container =
+        document.getElementById(
+            "dashboardSales"
+        );
+
+
+    const sales =
+        getSellerSales()
+            .slice()
+            .sort(
+                (a,b) =>
+                    new Date(b.createdAt || 0) -
+                    new Date(a.createdAt || 0)
+            )
+            .slice(0,5);
+
+
+    if(!sales.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    No sales yet
+                </strong>
+
+                Your approved sales will appear here.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order</th>
+
+                        <th>Product</th>
+
+                        <th>Qty</th>
+
+                        <th>Amount</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    sales.forEach(
+        sale => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(
+                            sale.orderId
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            sale.productName
+                        )}
+                    </td>
+
+                    <td>
+                        ${sale.quantity}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            sale.gross
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatDate(
+                            sale.createdAt
+                        )}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   RENDER PRODUCTS
+===================================================== */
+
+function renderProducts(){
+
+    const container =
+        document.getElementById(
+            "productsList"
+        );
+
+
+    if(!container){
+
+        return;
+
+    }
+
+
+    const myProducts =
+        getMyProducts();
+
+
+    const entries =
+        Object.entries(myProducts);
+
+
+    if(!entries.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    No products yet
+                </strong>
+
+                Click "Add Product" to create your first product.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Product</th>
+
+                        <th>Description</th>
+
+                        <th>Price</th>
+
+                        <th>Stock</th>
+
+                        <th>Status</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    entries.forEach(
+        ([id,product]) => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+
+                        <div class="product-name">
+
+                            ${escapeHtml(
+                                product.name ||
+                                "Unnamed Product"
+                            )}
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        ${escapeHtml(
+                            product.description ||
+                            "-"
+                        )}
+
+                    </td>
+
+                    <td>
+
+                        ${formatMoney(
+                            product.price || 0
+                        )}
+
+                    </td>
+
+                    <td>
+
+                        ${Number(
+                            product.stock || 0
+                        )}
+
+                    </td>
+
+                    <td>
+
+                        <span class="status ${
+                            product.active === false
+                                ? "inactive"
+                                : "active"
+                        }">
+
+                            ${
+                                product.active === false
+                                    ? "Inactive"
+                                    : "Active"
+                            }
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="editProduct('${id}')"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="deleteProduct('${id}')"
+                        >
+                            Delete
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   HTML PRODUCT FIELDS
+===================================================== */
+
+function resetHtmlFields(){
+
+    const container =
+        document.getElementById(
+            "htmlFields"
+        );
+
+
+    if(!container){
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+    addHtmlField("");
+
+}
+
+
+function addHtmlField(value = ""){
+
+    const container =
+        document.getElementById(
+            "htmlFields"
+        );
+
+
+    if(!container){
+
+        return;
+
+    }
+
+
+    const count =
+        container.querySelectorAll(
+            ".html-field"
+        ).length + 1;
+
+
+    const wrapper =
+        document.createElement("div");
+
+
+    wrapper.className =
+        "form-group full html-field";
+
+
+    const label =
+        document.createElement("label");
+
+
+    label.textContent =
+        "HTML " + count;
+
+
+    const textarea =
+        document.createElement("textarea");
+
+
+    textarea.className =
+        "input product-html-input";
+
+
+    textarea.placeholder =
+        "paste here";
+
+
+    textarea.value =
+        value || "";
+
+
+    wrapper.appendChild(label);
+
+    wrapper.appendChild(textarea);
+
+    container.appendChild(wrapper);
+
+}
+
+
+function getHtmlFiles(){
+
+    return Array.from(
+        document.querySelectorAll(
+            "#htmlFields .product-html-input"
+        )
+    ).map(
+        textarea =>
+            textarea.value
+    );
+
+}
+
+
+/* =====================================================
+   PRODUCT MODAL
+===================================================== */
+
+function openProductModal(productId = ""){
+
+    const modal =
+        document.getElementById(
+            "productModal"
+        );
+
+
+    const form =
+        document.getElementById(
+            "productForm"
+        );
+
+
+    form.reset();
+
+
+    resetHtmlFields();
+
+
+    document
+        .getElementById("productId")
+        .value = productId;
+
+
+    if(productId){
+
+        const product =
+            products[productId];
+
+
+        if(!product || !isMyProduct(product)){
+
+            return;
+
+        }
+
+
+        document
+            .getElementById(
+                "productModalTitle"
+            )
+            .textContent =
+                "Edit Product";
+
+
+        document
+            .getElementById("productName")
+            .value =
+                product.name || "";
+
+
+        document
+            .getElementById("productPrice")
+            .value =
+                product.price || 0;
+
+
+        document
+            .getElementById(
+                "productDescription"
+            )
+            .value =
+                product.description || "";
+
+
+        document
+            .getElementById(
+                "productConnectionGuide"
+            )
+            .value =
+                product.connectionGuide || "";
+
+
+        document
+            .getElementById(
+                "productCppCode"
+            )
+            .value =
+                product.cppCode || "";
+
+
+        let htmlFiles = [];
+
+
+        if(
+            Array.isArray(
+                product.htmlFiles
+            )
+        ){
+
+            htmlFiles =
+                product.htmlFiles;
+
+        }else if(
+            product.html
+        ){
+
+            htmlFiles = [
+                product.html
+            ];
+
+        }else{
+
+            htmlFiles = [
+                ""
+            ];
+
+        }
+
+
+        const htmlContainer =
+            document.getElementById(
+                "htmlFields"
+            );
+
+
+        htmlContainer.innerHTML = "";
+
+
+        htmlFiles.forEach(
+            html => {
+
+                addHtmlField(
+                    html
+                );
+
+            }
+        );
+
+
+        if(
+            !htmlFiles.length
+        ){
+
+            addHtmlField("");
+
+        }
+
+    }else{
+
+        document
+            .getElementById(
+                "productModalTitle"
+            )
+            .textContent =
+                "Add Product";
+
+    }
+
+
+    modal.classList.remove("hidden");
+
+}
+
+
+function closeProductModal(){
+
+    document
+        .getElementById(
+            "productModal"
+        )
+        .classList.add("hidden");
+
+}
+
+
+/* =====================================================
+   SAVE PRODUCT
+===================================================== */
+
+async function saveProduct(event){
+
+    event.preventDefault();
+
+
+    if(!currentSeller){
+
+        return;
+
+    }
+
+
+    const productId =
+        document
+            .getElementById("productId")
+            .value
+            .trim();
+
+
+    const name =
+        document
+            .getElementById("productName")
+            .value
+            .trim();
+
+
+    const price =
+        Number(
+            document
+                .getElementById("productPrice")
+                .value
+        );
+
+
+    const description =
+        document
+            .getElementById(
+                "productDescription"
+            )
+            .value
+            .trim();
+
+
+    const connectionGuide =
+        document
+            .getElementById(
+                "productConnectionGuide"
+            )
+            .value
+            .trim();
+
+
+    const cppCode =
+        document
+            .getElementById(
+                "productCppCode"
+            )
+            .value;
+
+
+    const htmlFiles =
+        getHtmlFiles();
+
+
+    if(!name){
+
+        alert(
+            "Please enter product name."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        if(productId){
+
+            const existing =
+                products[productId];
+
+
+            if(
+                !existing ||
+                !isMyProduct(existing)
+            ){
+
+                alert(
+                    "You cannot edit this product."
+                );
+
+                return;
+
+            }
+
+
+            const updateData = {
+
+                name:name,
+
+                price:price,
+
+                description:description,
+
+                connectionGuide:
+                    connectionGuide,
+
+                cppCode:
+                    cppCode,
+
+                htmlFiles:
+                    htmlFiles,
+
+                sellerId:
+                    currentSeller.sellerId,
+
+                sellerUsername:
+                    currentSeller.username,
+
+                shopName:
+                    currentSeller.shopName,
+
+                updatedAt:
+                    new Date().toISOString()
+
+            };
+
+
+            await firebasePatch(
+                "products/" + productId,
+                updateData
+            );
+
+
+        }else{
+
+            const newProductId =
+                "product_" +
+                Date.now() +
+                "_" +
+                Math.random()
+                    .toString(36)
+                    .substring(2,8);
+
+
+            const productData = {
+
+                name:name,
+
+                price:price,
+
+                description:description,
+
+                connectionGuide:
+                    connectionGuide,
+
+                cppCode:
+                    cppCode,
+
+                htmlFiles:
+                    htmlFiles,
+
+                sellerId:
+                    currentSeller.sellerId,
+
+                sellerUsername:
+                    currentSeller.username,
+
+                shopName:
+                    currentSeller.shopName,
+
+                active:true,
+
+                createdAt:
+                    new Date().toISOString()
+
+            };
+
+
+            await firebasePut(
+                "products/" +
+                newProductId,
+                productData
+            );
+
+        }
+
+
+        closeProductModal();
+
+        await loadAllData();
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to save product."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   EDIT PRODUCT
+===================================================== */
+
+function editProduct(productId){
+
+    openProductModal(
+        productId
+    );
+
+}
+
+
+/* =====================================================
+   DELETE PRODUCT
+===================================================== */
+
+async function deleteProduct(productId){
+
+    const product =
+        products[productId];
+
+
+    if(
+        !product ||
+        !isMyProduct(product)
+    ){
+
+        alert(
+            "You cannot delete this product."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Delete this product?"
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    try{
+
+        await firebaseDelete(
+            "products/" + productId
+        );
+
+
+        await loadAllData();
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to delete product."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDER ORDERS
+===================================================== */
+
+function renderOrders(){
+
+    const container =
+        document.getElementById(
+            "ordersList"
+        );
+
+
+    if(!container){
+
+        return;
+
+    }
+
+
+    const sales =
+        getSellerSales()
+            .slice()
+            .sort(
+                (a,b) =>
+                    new Date(b.createdAt || 0) -
+                    new Date(a.createdAt || 0)
+            );
+
+
+    if(!sales.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    No sales yet
+                </strong>
+
+                Approved sales will appear here.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order ID</th>
+
+                        <th>Product</th>
+
+                        <th>Quantity</th>
+
+                        <th>Price</th>
+
+                        <th>Gross</th>
+
+                        <th>Seller Earnings</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    sales.forEach(
+        sale => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(
+                            sale.orderId
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            sale.productName
+                        )}
+                    </td>
+
+                    <td>
+                        ${sale.quantity}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            sale.price
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            sale.gross
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            sale.net
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatDate(
+                            sale.createdAt
+                        )}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   RENDER EARNINGS
+===================================================== */
+
+function renderEarnings(){
+
+    const earnings =
+        calculateEarnings();
+
+
+    document
+        .getElementById("earnGross")
+        .textContent =
+            formatMoney(
+                earnings.gross
+            );
+
+
+    document
+        .getElementById("earnNet")
+        .textContent =
+            formatMoney(
+                earnings.net
+            );
+
+
+    document
+        .getElementById("earnCashout")
+        .textContent =
+            formatMoney(
+                earnings.cashoutTotal
+            );
+
+
+    document
+        .getElementById("earnBalance")
+        .textContent =
+            formatMoney(
+                earnings.balance
+            );
+
+
+    const container =
+        document.getElementById(
+            "earningsDetails"
+        );
+
+
+    if(!earnings.sales.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    No earnings yet
+                </strong>
+
+                Your earnings will appear here after approved sales.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order</th>
+
+                        <th>Product</th>
+
+                        <th>Gross</th>
+
+                        <th>Seller Rate</th>
+
+                        <th>Net</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    earnings.sales.forEach(
+        sale => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(
+                            sale.orderId
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            sale.productName
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            sale.gross
+                        )}
+                    </td>
+
+                    <td>
+                        ${SELLER_RATE * 100}%
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            sale.net
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatDate(
+                            sale.createdAt
+                        )}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   RENDER CASHOUT
+===================================================== */
+
+function renderCashout(){
+
+    const earnings =
+        calculateEarnings();
+
+
+    document
+        .getElementById("cashoutBalance")
+        .textContent =
+            formatMoney(
+                earnings.balance
+            );
+
+
+    document
+        .getElementById("cashoutEarnings")
+        .textContent =
+            formatMoney(
+                earnings.balance
+            );
+
+
+    updateCashoutPreview();
+
+
+    const container =
+        document.getElementById(
+            "cashoutHistory"
+        );
+
+
+    const sellerCashouts =
+        Object.entries(cashouts || {})
+            .filter(
+                ([id,cashout]) =>
+                    cashout &&
+                    String(
+                        cashout.sellerId
+                    ) ===
+                    String(
+                        currentSeller.sellerId
+                    )
+            )
+            .sort(
+                ([,a],[,b]) =>
+                    new Date(
+                        b.createdAt || 0
+                    ) -
+                    new Date(
+                        a.createdAt || 0
+                    )
+            );
+
+
+    if(!sellerCashouts.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    No cash out requests
+                </strong>
+
+                Your cash out requests will appear here.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+
+                        <th>Amount</th>
+
+                        <th>Fee</th>
+
+                        <th>Receive</th>
+
+                        <th>Account</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    sellerCashouts.forEach(
+        ([id,cashout]) => {
+
+            const status =
+                String(
+                    cashout.status ||
+                    "pending"
+                ).toLowerCase();
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${formatDate(
+                            cashout.createdAt
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            cashout.amount
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            cashout.fee ||
+                            CASHOUT_FEE
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatMoney(
+                            Number(
+                                cashout.amount || 0
+                            ) -
+                            Number(
+                                cashout.fee ||
+                                CASHOUT_FEE
+                            )
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            cashout.account ||
+                            "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="status ${status}">
+
+                            ${escapeHtml(
+                                cashout.status ||
+                                "Pending"
+                            )}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   CASHOUT PREVIEW
+===================================================== */
+
+function updateCashoutPreview(){
+
+    const input =
+        document.getElementById(
+            "cashoutAmount"
+        );
+
+
+    if(!input){
+
+        return;
+
+    }
+
+
+    const amount =
+        Number(
+            input.value || 0
+        );
+
+
+    const earnings =
+        calculateEarnings();
+
+
+    const receive =
+        Math.max(
+            0,
+            amount - CASHOUT_FEE
+        );
+
+
+    document
+        .getElementById(
+            "cashoutReceive"
+        )
+        .textContent =
+            formatMoney(
+                receive
+            );
+
+
+    document
+        .getElementById(
+            "cashoutEarnings"
+        )
+        .textContent =
+            formatMoney(
+                earnings.balance
+            );
+
+}
+
+
+/* =====================================================
+   REQUEST CASHOUT
+===================================================== */
+
+async function requestCashout(event){
+
+    event.preventDefault();
+
+
+    if(!currentSeller){
+
+        return;
+
+    }
+
+
+    const amount =
+        Number(
+            document
+                .getElementById(
+                    "cashoutAmount"
+                )
+                .value
+        );
+
+
+    const account =
+        document
+            .getElementById(
+                "cashoutAccount"
+            )
+            .value
+            .trim();
+
+
+    const earnings =
+        calculateEarnings();
+
+
+    if(amount <= 0){
+
+        alert(
+            "Please enter a valid amount."
+        );
+
+        return;
+
+    }
+
+
+    if(amount > earnings.balance){
+
+        alert(
+            "Cash out amount is greater than your available balance."
+        );
+
+        return;
+
+    }
+
+
+    if(!account){
+
+        alert(
+            "Please enter your GCash/payment account."
+        );
+
+        return;
+
+    }
+
+
+    if(amount <= CASHOUT_FEE){
+
+        alert(
+            "Amount must be greater than the cash out fee."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Submit this cash out request?"
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    try{
+
+        const cashoutId =
+            "cashout_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2,8);
+
+
+        const cashoutData = {
+
+            sellerId:
+                currentSeller.sellerId,
+
+            sellerUsername:
+                currentSeller.username,
+
+            shopName:
+                currentSeller.shopName,
+
+            amount:amount,
+
+            fee:CASHOUT_FEE,
+
+            account:account,
+
+            status:"pending",
+
+            createdAt:
+                new Date().toISOString()
+
+        };
+
+
+        await firebasePut(
+            "cashouts/" +
+            cashoutId,
+            cashoutData
+        );
+
+
+        document
+            .getElementById(
+                "cashoutAmount"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "cashoutAccount"
+            )
+            .value = "";
+
+
+        alert(
+            "Cash out request submitted."
+        );
+
+
+        await loadAllData();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to submit cash out request."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+===================================================== */
+
+document
+    .getElementById("productModal")
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                this
+            ){
+
+                closeProductModal();
+
+            }
+
+        }
+    );
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        checkSellerSession();
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
